@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 class sjfNonPreemptive:
     def __init__(self, processes):
         self.processes = processes
@@ -7,7 +9,7 @@ class sjfNonPreemptive:
         self.current_time = 0
         self.completed_processes = []
         self.gantt_chart = []
-        
+
     def run(self):
         while len(self.completed_processes) < self.n:
             shortest_process = None
@@ -23,9 +25,9 @@ class sjfNonPreemptive:
                 self.total_waiting_time += shortest_process['waiting_time']
                 self.total_turnaround_time += shortest_process['turnaround_time']
                 self.completed_processes.append(shortest_process)
-                self.gantt_chart.append((shortest_process['id'], self.current_time, self.current_time + shortest_process['burst_time']))
+                self.gantt_chart.append((shortest_process['id'], self.current_time, self.current_time + shortest_process['burst_time'], shortest_process['burst_time']))
                 self.current_time += shortest_process['burst_time']
-                
+
         avg_waiting_time = self.total_waiting_time / self.n
         avg_turnaround_time = self.total_turnaround_time / self.n
 
@@ -37,20 +39,21 @@ class sjfNonPreemptive:
         print("Average waiting time:", avg_waiting_time)
         print("Average turnaround time:", avg_turnaround_time)
 
-        # Print the gantt chart
-        print("\nGantt Chart:")
-        print("--------------------------------------------------")
-        prev_id = None
-        for i in range(len(self.gantt_chart)):
-            if i == 0:
-                print("|  P{}  |  {}  |  {}  |".format(self.gantt_chart[i][0], self.gantt_chart[i][1], self.gantt_chart[i][2]))
-                prev_id = self.gantt_chart[i][0]
-            else:
-                if prev_id == self.gantt_chart[i][0]:
-                    print("|      |  {}  |  {}  |".format(self.gantt_chart[i][1], self.gantt_chart[i][2]))
-                else:
-                    print("|  P{}  |  {}  |  {}  |".format(self.gantt_chart[i][0], self.gantt_chart[i][1], self.gantt_chart[i][2]))
-                    prev_id = self.gantt_chart[i][0]
-        print("\n--------------------------------------------------")
+        # Draw the gantt chart
+        fig, gnt = plt.subplots()
+        gnt.set_ylim(0, 10)
+        gnt.set_xlim(0, self.current_time + 5)
+        gnt.set_xlabel('Time')
+        gnt.set_ylabel('Process')
+        gnt.set_yticks([i+0.5 for i in range(self.n)])
+        gnt.set_yticklabels(['P{}'.format(i+1) for i in range(self.n)])
+        gnt.grid(True)
 
+        for i in range(len(self.gantt_chart)):
+            process_id, start_time, end_time, burst_time = self.gantt_chart[i]
+            color = 'C{}'.format(process_id % 10)
+            gnt.broken_barh([(start_time, burst_time)], (i, 0.6), facecolors=color, edgecolors='black')
+            gnt.annotate('P{}'.format(process_id), (start_time+burst_time/2, i+0.3), ha='center', va='center', color='white', fontweight='bold')
+
+        plt.show()
 

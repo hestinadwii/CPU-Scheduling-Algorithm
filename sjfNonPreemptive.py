@@ -12,14 +12,17 @@ class sjfNonPreemptive:
 
     def run(self):
         while len(self.completed_processes) < self.n:
-            shortest_process = None
+            shortest_processes = []
             for process in self.processes:
                 if process['arrival_time'] <= self.current_time and process not in self.completed_processes:
-                    if shortest_process is None or process['burst_time'] <= shortest_process['burst_time']:
-                        shortest_process = process
-            if shortest_process is None:
+                    if not shortest_processes or process['burst_time'] < shortest_processes[0]['burst_time']:
+                        shortest_processes = [process]
+                    elif process['burst_time'] == shortest_processes[0]['burst_time']:
+                        shortest_processes.append(process)
+            if not shortest_processes:
                 self.current_time = self.processes[0]['arrival_time']
             else:
+                shortest_process = min(shortest_processes, key=lambda x: x['arrival_time'])
                 shortest_process['waiting_time'] = self.current_time - shortest_process['arrival_time']
                 shortest_process['turnaround_time'] = shortest_process['waiting_time'] + shortest_process['burst_time']
                 self.total_waiting_time += shortest_process['waiting_time']
@@ -56,4 +59,5 @@ class sjfNonPreemptive:
             gnt.annotate('P{}'.format(process_id), (start_time+burst_time/2, i+0.3), ha='center', va='center', color='white', fontweight='bold')
 
         plt.show()
+
 

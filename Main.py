@@ -1,6 +1,8 @@
 from FCFS import FCFS
 from sjfNonPreemptive import sjfNonPreemptive
 from sjfPreemptive import ShortestJobFirst
+from PriorityPreemptive import P_Priority
+from PriorityNonPreemtive import NP_Priority
 
 
 fcfs = FCFS()
@@ -45,4 +47,17 @@ while True:
             sjf = ShortestJobFirst(processes)
             sjf.shortest_job_first()
             sjf.display_gantt_chart()
+    
+    elif option == 5:
+        if __name__ == "__main__":
+            no_of_processes = int(input("Enter number of processes: "))
+            priority = NP_Priority()
+            priority.processData(no_of_processes)
+            
+    elif option == 6:
+        if __name__ == "__main__":
+            no_of_processes = int(input("Enter number of processes: "))
+            priority = P_Priority()
+            priority.processData(no_of_processes)
+
 

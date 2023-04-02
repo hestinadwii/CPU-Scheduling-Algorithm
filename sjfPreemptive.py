@@ -27,6 +27,9 @@ class ShortestJobFirst:
             for i in range(len(available_processes)):
                 if self.processes[available_processes[i]][2] < self.processes[shortest_process][2]:
                     shortest_process = available_processes[i]
+                elif self.processes[available_processes[i]][2] == self.processes[shortest_process][2]:
+                    if self.processes[available_processes[i]][1] < self.processes[shortest_process][1]:
+                        shortest_process = available_processes[i]
 
             # Add label to gantt chart if a new process is being executed
             if self.current_process != shortest_process:

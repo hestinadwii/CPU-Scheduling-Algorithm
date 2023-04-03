@@ -59,11 +59,9 @@ class FCFS:
         return total_waiting_time
 
     def printData(self, process_data, turn_around_time, waiting_time):
-        print("Process_ID\tArrival_Time\tBurst_Time\tCompletion_Time\t\tTurnaround_Time\t\tWaiting_Time")
+        print("Process_ID\tArrival_Time\tBurst_Time\tCompletion_Time\tTurnaround_Time\tWaiting_Time")
         for i in range(len(process_data)):
-            print("{}\t\t{}\t\t{}\t\t{}\t\t\t{}\t\t\t{}".format(
-                process_data[i][0], process_data[i][1], process_data[i][2],  process_data[i][3], 
-                process_data[i][4], process_data[i][5]))
+            print("{}\t\t{}\t\t{}\t\t{}\t\t{}\t\t\t{}".format(process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][3], process_data[i][4], process_data[i][5]))
 
         print(f'Average Turnaround Time: {turn_around_time / len(process_data)}')
 

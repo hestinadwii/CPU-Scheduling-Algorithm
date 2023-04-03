@@ -2,36 +2,33 @@ from FCFS import FCFS
 from sjfNonPreemptive import sjfNonPreemptive
 from sjfPreemptive import ShortestJobFirst
 from RoundRobin import RoundRobin
+from PriorityNonPreemptive import NP_Priority
 from PriorityPreemptive import P_Priority
-from PriorityNonPreemtive import NP_Priority
 
+option = int
 
-fcfs = FCFS()
-rr = RoundRobin()
-
-while True:
+while option != 0:
     print("1. FCFS")
     print("2. SJF Non-Preemptive")
     print("3. SJF Preemptive")
     print("4. Round Robin")
     print("5. Priority Non-Preemptive")
     print("6. Priority Preemptive")
-    print("0. Exit from Program")
+    print("0. Exit from the Program")
     option = int(input("\nEnter the Number's Menu: "))
 
     if option == 1:
+        fcfs = FCFS()
         fcfs.run()
     elif option == 2:
         if __name__ == "__main__":
             n = int(input("Enter number of processes: "))
             processes = []
             for i in range(n):
-                arrival_time = int(
-                    input("Enter arrival time of process {}: ".format(i+1)))
-                burst_time = int(
-                    input("Enter burst time of process {}: ".format(i+1)))
-                process = {'id': i+1, 'arrival_time': arrival_time,
-                           'burst_time': burst_time, 'waiting_time': None, 'turnaround_time': None}
+                arrival_time = int(input("Enter arrival time of process {}: ".format(i+1)))
+                burst_time = int(input("Enter burst time of process {}: ".format(i+1)))
+                process = {'id': i+1, 'arrival_time': arrival_time, 'burst_time': burst_time, 
+                           'waiting_time': None, 'turnaround_time': None}
                 processes.append(process)
 
             sjf = sjfNonPreemptive(processes)
@@ -50,6 +47,7 @@ while True:
             sjf.shortest_job_first()
             sjf.display_gantt_chart()
     elif option == 4:
+        rr = RoundRobin()
         rr.run()
     elif option == 5:
         if __name__ == "__main__":
@@ -62,5 +60,9 @@ while True:
             no_of_processes = int(input("Enter number of processes: "))
             priority = P_Priority()
             priority.processData(no_of_processes)
-
-
+    elif option == 0:
+        # jika exit dari program
+        print("\nSuccessfully exit from the Program!!")
+        print("Thank You and Have a Great Day ^^")
+    else:
+        print("\n!!! Please input the valid options !!!\n")

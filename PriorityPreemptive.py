@@ -57,8 +57,8 @@ class P_Priority:
                 process_data[k][2] = process_data[k][2] - 1
                 if process_data[k][2] == 0:     
                     process_data[k][4] = 1
-                    process_data[k].append(e_time - process_data[k][5]-1)
-                    process_data[k].append(e_time)
+                    process_data[k].append(e_time - process_data[k][5])
+                    process_data[k].append(e_time)        
             if len(ready_queue) == 0:
                 normal_queue.sort(key=lambda x: x[1])
                 if s_time < normal_queue[0][1]:
@@ -75,7 +75,7 @@ class P_Priority:
                 if process_data[k][2] == 0:      
                     process_data[k][4] = 1
                     print(e_time - process_data[k][5]-1, e_time)
-                    process_data[k].append(e_time - process_data[k][5]-1)
+                    process_data[k].append(e_time - process_data[k][5])
                     process_data[k].append(e_time)
 
         t_time = P_Priority.calculateTurnaroundTime(self, process_data)
@@ -118,24 +118,25 @@ class P_Priority:
         print(tabulate(data, headers=col_names))
         print(f'Average Turnaround Time: {average_turnaround_time}')
         print(f'Average Waiting Time: {average_waiting_time}')
-
+        print(f'Sequence of Process: {sequence_of_process}')
         processes = [process_data[i][0] for i in range(len(process_data))]
-        start_time = [process_data[i][6] for i in range(len(process_data))]
+        start_time = [process_data[i][7]-(process_data[i][5]+process_data[i][9]) for i in range(len(process_data))]
         completion_time = [process_data[i][7] for i in range(len(process_data))]
-        burst_time = [process_data[i][5] for i in range(len(process_data))]
+        burst_time = [process_data[i][5]+process_data[i][9] for i in range(len(process_data))]
 
         fig, gantt_chart = plt.subplots()
-        gantt_chart.set_xlim(0, len(process_data)*10)
+        gantt_chart.set_xlim(0, max(burst_time)+10)
         gantt_chart.set_ylim(0, 10)
         gantt_chart.set_title('Gantt Chart - Priority Scheduling')
         gantt_chart.set_xlabel('Time')
         gantt_chart.set_ylabel('Processes')
         gantt_chart.set_yticks([i+0.5 for i in range(len(processes))])
-        gantt_chart.set_xticks(range(max(completion_time) + 1))
+        gantt_chart.set_xticks(range(max(burst_time)+10))
         gantt_chart.set_yticklabels([f'P{i[0]}' for i in process_data])
         gantt_chart.grid(True)
+        
         for i in range(len(process_data)):
             color = 'C{}'.format(processes[i] % 10)
-            gantt_chart.broken_barh([(start_time[i], burst_time[i])], (i, 0.6), facecolors = color, edgecolors='black')
+            gantt_chart.broken_barh([(start_time[i], burst_time[i])], (i, 0.5), facecolors = color, edgecolors='black')
             gantt_chart.annotate('P{}'.format(processes[i]), (start_time[i]+burst_time[i]/2, i+0.3), ha='center', va='center', color='white', fontweight='bold')
         plt.show()

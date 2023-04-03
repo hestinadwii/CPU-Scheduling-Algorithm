@@ -26,7 +26,7 @@ class NP_Priority:
         start_time = []
         exit_time = []
         s_time = 0
-        process_data.sort(key=lambda x: x[1])
+        process_data.sort(key=lambda x: x[3])
 
         for i in range(len(process_data)):
             ready_queue = []
@@ -113,8 +113,8 @@ class NP_Priority:
         col_names=["Process","Priority","Arrival Time","Burst Time","Waiting Time","Turnaround Time"]
         print(tabulate(data, headers=col_names))
         print(f'Average Turnaround Time: {average_turnaround_time}')
-
         print(f'Average Waiting Time: {average_waiting_time}')
+        print(f'Sequence of Process: {sequence_of_process}')
         
         processes = [process_data[i][0] for i in range(len(process_data))]
         start_time = [process_data[i][5] for i in range(len(process_data))]
@@ -122,18 +122,18 @@ class NP_Priority:
         burst_time = [process_data[i][2] for i in range(len(process_data))]
 
         fig, gantt_chart = plt.subplots()
-        gantt_chart.set_xlim(0, len(process_data)*10)
+        gantt_chart.set_xlim(0, max(burst_time) * 4)
         gantt_chart.set_ylim(0, 10)
         gantt_chart.set_title('Gantt Chart - Priority Scheduling')
         gantt_chart.set_xlabel('Time')
         gantt_chart.set_ylabel('Processes')
         gantt_chart.set_yticks([i+0.5 for i in range(len(processes))])
-        gantt_chart.set_xticks(range(max(completion_time) + 1))
+        gantt_chart.set_xticks(range(max(burst_time)*4))
         gantt_chart.set_yticklabels([f'P{i[0]}' for i in process_data])
         gantt_chart.grid(True)
- 
+        
         for i in range(len(process_data)):
             color = 'C{}'.format(processes[i] % 10)
-            gantt_chart.broken_barh([(start_time[i], burst_time[i])], (i, 0.6), facecolors = color, edgecolors='black')
+            gantt_chart.broken_barh([(start_time[i], burst_time[i])], (i, 0.5), facecolors = color, edgecolors='black')
             gantt_chart.annotate('P{}'.format(processes[i]), (start_time[i]+burst_time[i]/2, i+0.3), ha='center', va='center', color='white', fontweight='bold')
         plt.show()

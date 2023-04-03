@@ -84,9 +84,10 @@ class ShortestJobFirst:
             start_time = self.gantt_chart[i][1]
             end_time = self.gantt_chart[i][2]
             colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
-            gantt.broken_barh([(start_time, end_time-start_time)], (i, 0.5), facecolors=(colors[i % len(colors)]))
-            gantt.text((start_time+end_time)/2, i+0.25, self.gantt_chart[i][0], ha='center', va='center')
+            gantt.broken_barh([(start_time, end_time-start_time)], (i, 0.5), facecolors=(colors[i % len(colors)]),edgecolors='black')
+            gantt.text((start_time+end_time)/2, i+0.25, self.gantt_chart[i][0], ha='center', va='center',color='white', fontweight='bold')
         gantt.set_ylim(0, len(self.gantt_chart))
+        gantt.set_title("Gantt Chart SJF Preemptive")
         plt.show()
            
 

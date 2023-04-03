@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 
 class FCFS:
-    # Get input from user
-        
     def get_input(self, process_data):
         process_data = []
         noProcess = int(input("Enter Number of process: "))
@@ -43,39 +41,33 @@ class FCFS:
             
             total_turnaround_time = total_turnaround_time + turnaround_time
             process_data[i].append(turnaround_time)
-        average_turnaround_time = total_turnaround_time / len(process_data)
-        '''
-        average_turnaround_time = total_turnaround_time / no_of_processes
-        '''
-        return average_turnaround_time
+        # average_turnaround_time = total_turnaround_time / len(process_data)
+        
+        return total_turnaround_time
 
     def calculateWaitingTime(self, process_data):
         total_waiting_time = 0
         for i in range(len(process_data)):
             waiting_time = process_data[i][4] - process_data[i][2]
-            '''
-            waiting_time = turnaround_time - burst_time
-            '''
+            
+            # waiting_time = turnaround_time - burst_time
+            
             total_waiting_time = total_waiting_time + waiting_time
             process_data[i].append(waiting_time)
-        average_waiting_time = total_waiting_time / len(process_data)
-        '''
-        average_waiting_time = total_waiting_time / no_of_processes
-        '''
-        return average_waiting_time
+        # average_waiting_time = total_waiting_time / len(process_data)
+        
+        return total_waiting_time
 
-    def printData(self, process_data, average_turnaround_time, average_waiting_time):
-
-        print("Process_ID\t\tArrival_Time\t\tBurst_Time\t\tCompletion_Time\t\tTurnaround_Time\t\tWaiting_Time")
-
+    def printData(self, process_data, turn_around_time, waiting_time):
+        print("Process_ID\tArrival_Time\tBurst_Time\tCompletion_Time\t\tTurnaround_Time\t\tWaiting_Time")
         for i in range(len(process_data)):
-            for j in range(len(process_data[i])):
-                print(process_data[i][j], end="\t\t\t")
-            print()
+            print("{}\t\t{}\t\t{}\t\t{}\t\t\t{}\t\t\t{}".format(
+                process_data[i][0], process_data[i][1], process_data[i][2],  process_data[i][3], 
+                process_data[i][4], process_data[i][5]))
 
-        print(f'Average Turnaround Time: {average_turnaround_time}')
+        print(f'Average Turnaround Time: {turn_around_time / len(process_data)}')
 
-        print(f'Average Waiting Time: {average_waiting_time}')
+        print(f'Average Waiting Time: {waiting_time / len(process_data)}')
     
     def gantChart(self, process_data, start_time, exit_time):
         # Plot Gantt chart
@@ -89,12 +81,11 @@ class FCFS:
         gantt.set_yticklabels([f'P{i[0]}' for i in process_data])
         # y_ticks = [i[0] for i in process_data]
         # gantt.set_yticks(y_ticks)
-        gantt.set_ylim(0, len(process_data) + 0.5)
+        gantt.set_ylim(0, len(process_data) + 1)
         gantt.set_xlim(0, exit_time[-1])
         for i in range(len(process_data)):
             gantt.broken_barh([(start_time[i], process_data[i][2])], (process_data[i][0]-0.4, 0.8), facecolors=('tab:blue'))
 
-        # Show the plot
         plt.show()
     
     def run(self):

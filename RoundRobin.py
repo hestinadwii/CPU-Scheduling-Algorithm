@@ -7,12 +7,12 @@ class RoundRobin:
         for i in range(no_of_processes):
             temporary = []
             process_id = i+1
-            arrival_time = int(input(f"Enter Arrival Time for Process {process_id}: "))
-            burst_time = int(input(f"Enter Burst Time for Process {process_id}: "))
+            arrival_time = int(input(f"Masukkan Arrival Time untuk proses {process_id}: "))
+            burst_time = int(input(f"Masukkan Burst Time untuk proses {process_id}: "))
             temporary.extend([process_id, arrival_time, burst_time, 0, burst_time])
             process_data.append(temporary)
         
-        time_slice = int(input("Enter Time Slice: "))
+        time_slice = int(input("Masukkan Time Slice: "))
 
         RoundRobin.schedulingProcess(self, process_data, time_slice, no_of_processes)
     
@@ -35,18 +35,15 @@ class RoundRobin:
                             if process_data[i][0] == ready_queue[k][0]:
                                 present = 1
                     if present == 0:
-                        temp.extend([process_data[i][0], process_data[i]
-                                    [1], process_data[i][2], process_data[i][4]])
+                        temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
                         ready_queue.append(temp)
                         temp = []
                     if len(ready_queue) != 0 and len(executed_process) != 0:
                         for k in range(len(ready_queue)):
                             if ready_queue[k][0] == executed_process[len(executed_process) - 1]:
-                                ready_queue.insert(
-                                    (len(ready_queue) - 1), ready_queue.pop(k))
+                                ready_queue.insert((len(ready_queue) - 1), ready_queue.pop(k))
                 elif process_data[i][3] == 0:
-                    temp.extend([process_data[i][0], process_data[i]
-                                [1], process_data[i][2], process_data[i][4]])
+                    temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
                     normal_queue.append(temp)
                     temp = []
             if len(ready_queue) == 0 and len(normal_queue) == 0:

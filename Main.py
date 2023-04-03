@@ -1,11 +1,13 @@
 from FCFS import FCFS
 from sjfNonPreemptive import sjfNonPreemptive
 from sjfPreemptive import ShortestJobFirst
+from RoundRobin import RoundRobin
 from PriorityPreemptive import P_Priority
 from PriorityNonPreemtive import NP_Priority
 
 
 fcfs = FCFS()
+rr = RoundRobin()
 
 while True:
     print("1. FCFS")
@@ -47,7 +49,8 @@ while True:
             sjf = ShortestJobFirst(processes)
             sjf.shortest_job_first()
             sjf.display_gantt_chart()
-    
+    elif option == 4:
+        rr.run()
     elif option == 5:
         if __name__ == "__main__":
             no_of_processes = int(input("Enter number of processes: "))

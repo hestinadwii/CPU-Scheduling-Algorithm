@@ -26,7 +26,7 @@ class NP_Priority:
         start_time = []
         exit_time = []
         s_time = 0
-        process_data.sort(key=lambda x: x[3])
+        process_data.sort(key=lambda x: x[1])
 
         for i in range(len(process_data)):
             ready_queue = []

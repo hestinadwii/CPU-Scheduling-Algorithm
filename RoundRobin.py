@@ -103,8 +103,7 @@ class RoundRobin:
                     process_data[j].append(end_time)
         t_time = RoundRobin.calculateTurnaroundTime(self, process_data)
         w_time = RoundRobin.calculateWaitingTime(self, process_data)
-        RoundRobin.printData(self, process_data, t_time,
-                             w_time, executed_process)
+        RoundRobin.printData(self, process_data, t_time, w_time, executed_process)
         
         # create Gantt chart
         fig, gnt = plt.subplots()
@@ -117,8 +116,7 @@ class RoundRobin:
         gnt.set_yticklabels([f'P{i}' for i in range(1, no_of_processes + 1)])
 
         for i in range(len(start_time)):
-            gnt.broken_barh([(start_time[i], exit_time[i] - start_time[i])],
-                            (executed_process[i]-1, 1), facecolors=('tab:blue'))
+            gnt.broken_barh([(start_time[i], exit_time[i] - start_time[i])], (executed_process[i]-1, 1), facecolors=('tab:blue'))
 
         plt.show()
 

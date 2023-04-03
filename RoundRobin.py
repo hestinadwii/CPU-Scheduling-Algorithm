@@ -102,7 +102,7 @@ class RoundRobin:
         w_time = RoundRobin.calculateWaitingTime(self, process_data)
         RoundRobin.printData(self, process_data, t_time, w_time, executed_process)
         
-        # create Gantt chart
+        # buat Gantt chart
         fig, gnt = plt.subplots()
         gnt.set_title("Gantt Chart - Round Robin")
         gnt.set_xlabel('Time')

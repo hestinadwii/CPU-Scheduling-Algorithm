@@ -1,65 +1,93 @@
-# import library untuk membuat gantt chart
 import matplotlib.pyplot as plt
 
-class sjfNonPreemptive:
+class ShortestJobFirst:
     def __init__(self, processes):
         self.processes = processes
-        self.n = len(processes)
-        self.total_waiting_time = 0
-        self.total_turnaround_time = 0
+        self.p = len(processes)
+        self.total_time = 0
+        self.process_left = len(processes)
         self.current_time = 0
-        self.completed_processes = []
+        self.current_process = -1
         self.gantt_chart = []
 
-    def run(self):
-        while len(self.completed_processes) < self.n:
-            shortest_processes = []
-            for process in self.processes:
-                if process['arrival_time'] <= self.current_time and process not in self.completed_processes:
-                    if not shortest_processes or process['burst_time'] < shortest_processes[0]['burst_time']:
-                        shortest_processes = [process]
-                    elif process['burst_time'] == shortest_processes[0]['burst_time']:
-                        shortest_processes.append(process)
-            if not shortest_processes:
-                self.current_time = self.processes[0]['arrival_time']
-            else:
-                shortest_process = min(shortest_processes, key=lambda x: x['arrival_time'])
-                shortest_process['waiting_time'] = self.current_time - shortest_process['arrival_time']
-                shortest_process['turnaround_time'] = shortest_process['waiting_time'] + shortest_process['burst_time']
-                self.total_waiting_time += shortest_process['waiting_time']
-                self.total_turnaround_time += shortest_process['turnaround_time']
-                self.completed_processes.append(shortest_process)
-                self.gantt_chart.append((shortest_process['id'], self.current_time, self.current_time + shortest_process['burst_time'], shortest_process['burst_time']))
-                self.current_time += shortest_process['burst_time']
+    def shortest_job_first(self):
+        while self.process_left > 0:
+            # Check which processes have arrived
+            available_processes = []
+            for i in range(self.p):
+                if self.processes[i][1] <= self.current_time and self.processes[i][3] == 0: # process hasn't completed yet
+                    available_processes.append(i)
 
-        avg_waiting_time = self.total_waiting_time / self.n
-        avg_turnaround_time = self.total_turnaround_time / self.n
+            if len(available_processes) == 0:
+                self.current_time += 1
+                continue
 
-        # Print the results
-        print("Process\t\tBurst Time\tWaiting Time\tTurnaround Time")
-        for process in self.completed_processes:
-            print("{}\t\t{}\t\t{}\t\t{}".format(process['id'], process['burst_time'],
-              process['waiting_time'], process['turnaround_time']))
-        print("Average waiting time:", avg_waiting_time)
-        print("Average turnaround time:", avg_turnaround_time)
+            # Find process with smallest burst time
+            shortest_process = available_processes[0]
+            for i in range(len(available_processes)):
+                if self.processes[available_processes[i]][2] < self.processes[shortest_process][2]:
+                    shortest_process = available_processes[i]
+                elif self.processes[available_processes[i]][2] == self.processes[shortest_process][2]:
+                    if self.processes[available_processes[i]][1] < self.processes[shortest_process][1]:
+                        shortest_process = available_processes[i]
 
-        # Draw the gantt chart
-        gnt = plt.subplots()
-        gnt.set_ylim(0, 10)
-        gnt.set_xlim(0, self.current_time + 5)
-        gnt.set_xlabel('Time')
-        gnt.set_ylabel('Process')
-        gnt.set_yticks([i+1.0 for i in range(self.n)])
-        gnt.set_yticklabels(['P{}'.format(i+1) for i in range(self.n)])
-        gnt.grid(True)
-        gnt.set_title("Gantt Chart SJF Non Preemptive")
+            # Add label to gantt chart if a new process is being executed
+            if self.current_process != shortest_process:
+                if len(self.gantt_chart) > 0:
+                    self.gantt_chart[-1].append(self.current_time) # add end time to previous process
+                self.gantt_chart.append([self.processes[shortest_process][0], self.current_time]) # add new process
+                self.current_process = shortest_process
 
+            # Decrease remaining time of current process
+            self.processes[shortest_process][2] -= 1
+            remaining_time = self.processes[shortest_process][2]
+
+            # Check if process has completed
+            # Check if process has completed
+            if remaining_time == 0:
+                self.processes[shortest_process][3] = self.current_time + 1 # completion time
+                self.processes[shortest_process][4] = self.processes[shortest_process][3] - self.processes[shortest_process][1] - self.processes[shortest_process][2] # waiting time
+                self.processes[shortest_process][5] = self.processes[shortest_process][3] - self.processes[shortest_process][1] # turnaround time
+                self.process_left -= 1 # update process_left
+
+
+            # Move time forward
+            self.current_time += 1
+
+        # add end time to last process
+        if len(self.gantt_chart) > 0:
+            self.gantt_chart[-1].append(self.current_time)
+            
+        print("\nTabel waktu proses")
+        print("Proses\tBurst Time\tArrival Time\tWaiting Time\tTurnaround Time\tCompletion Time")
+        total_waiting_time = 0
+        total_turnaround_time = 0
+        for i in range(self.p):
+            completion_time = self.processes[i][3]
+            arrival_time = self.processes[i][1]
+            burst_time = self.processes[i][6]
+            turnaround_time = completion_time - arrival_time
+            waiting_time = turnaround_time - burst_time
+            total_waiting_time += waiting_time
+            total_turnaround_time += turnaround_time
+            print(f"{self.processes[i][0]}\t{self.processes[i][6]}\t\t{self.processes[i][1]}\t\t{waiting_time}\t\t{turnaround_time}\t\t{completion_time}")
+        average_waiting_time = total_waiting_time / self.p
+        average_turnaround_time = total_turnaround_time / self.p
+        print(f"\nWaktu tunggu rata-rata: {average_waiting_time}")
+        print(f"Turnaround time rata-rata: {average_turnaround_time}")
+        
+    def display_gantt_chart(self):
+        gantt = plt.subplots()
+        gantt.set_xlabel('Time')
+        gantt.set_ylabel('Processes')
         for i in range(len(self.gantt_chart)):
-            process_id, start_time, end_time, burst_time = self.gantt_chart[i]
-            color = 'C{}'.format(process_id % 10)
-            gnt.broken_barh([(start_time, burst_time)], (i, 0.6), facecolors=color, edgecolors='black')
-            gnt.annotate('P{}'.format(process_id), (start_time+burst_time/2, i+0.3), ha='center', va='center', color='white', fontweight='bold')
-
+            start_time = self.gantt_chart[i][1]
+            end_time = self.gantt_chart[i][2]
+            colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
+            gantt.broken_barh([(start_time, end_time-start_time)], (i, 0.5), facecolors=(colors[i % len(colors)]),edgecolors='black')
+            gantt.text((start_time+end_time)/2, i+0.25, self.gantt_chart[i][0], ha='center', va='center',color='white', fontweight='bold')
+        gantt.set_ylim(0, len(self.gantt_chart))
+        gantt.set_title("Gantt Chart SJF Preemptive")
         plt.show()
-
+           
 

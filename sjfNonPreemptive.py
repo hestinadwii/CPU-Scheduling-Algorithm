@@ -1,3 +1,4 @@
+# import library untuk membuat gantt chart
 import matplotlib.pyplot as plt
 
 class sjfNonPreemptive:
@@ -43,14 +44,15 @@ class sjfNonPreemptive:
         print("Average turnaround time:", avg_turnaround_time)
 
         # Draw the gantt chart
-        fig, gnt = plt.subplots()
+        gnt = plt.subplots()
         gnt.set_ylim(0, 10)
         gnt.set_xlim(0, self.current_time + 5)
         gnt.set_xlabel('Time')
         gnt.set_ylabel('Process')
-        gnt.set_yticks([i+0.5 for i in range(self.n)])
+        gnt.set_yticks([i+1.0 for i in range(self.n)])
         gnt.set_yticklabels(['P{}'.format(i+1) for i in range(self.n)])
         gnt.grid(True)
+        gnt.set_title("Gantt Chart SJF Non Preemptive")
 
         for i in range(len(self.gantt_chart)):
             process_id, start_time, end_time, burst_time = self.gantt_chart[i]
